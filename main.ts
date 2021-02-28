@@ -1,3 +1,8 @@
+function scheller () {
+    vor()
+    vr += 128
+    vl += 128
+}
 function vor () {
     pins.digitalWritePin(DigitalPin.P0, 1)
     pins.digitalWritePin(DigitalPin.P1, 0)
@@ -24,9 +29,10 @@ input.onButtonPressed(Button.AB, function () {
 })
 radio.onReceivedString(function (receivedString) {
     if (receivedString == "schneller") {
-        vor()
+        scheller()
         basic.showArrow(ArrowNames.North)
     } else if (receivedString == "langsamer") {
+        langsamer()
         basic.showArrow(ArrowNames.North)
     } else if (receivedString == "stop") {
         stop()
@@ -45,6 +51,11 @@ radio.onReceivedString(function (receivedString) {
 input.onButtonPressed(Button.B, function () {
     basic.showArrow(ArrowNames.North)
 })
+function langsamer () {
+    vor()
+    vr += -128
+    vl += -128
+}
 input.onLogoEvent(TouchButtonEvent.Pressed, function () {
     basic.showLeds(`
         . . . . .
@@ -54,6 +65,12 @@ input.onLogoEvent(TouchButtonEvent.Pressed, function () {
         . . . . .
         `)
 })
+function schreibeGeschwindigkeit () {
+    pins.analogWritePin(AnalogPin.P14, vr)
+    pins.analogWritePin(AnalogPin.P13, vl)
+}
+let vl = 0
+let vr = 0
 basic.showLeds(`
     . . . . .
     . . . . .
@@ -62,6 +79,10 @@ basic.showLeds(`
     . . . . .
     `)
 radio.setGroup(49)
+vr = 703
+vl = 703
 basic.forever(function () {
-	
+    vr = Math.constrain(vr, 383, 1023)
+    vl = Math.constrain(vl, 383, 1023)
+    schreibeGeschwindigkeit()
 })
