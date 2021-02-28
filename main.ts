@@ -1,3 +1,7 @@
+radio.onReceivedNumber(function (receivedNumber) {
+    vr = Math.map(receivedNumber, -45, 45, 383, 1023)
+    vl = Math.map(-1 * receivedNumber, -45, 45, 383, 1023)
+})
 function schneller () {
     vor()
     vr += 128
